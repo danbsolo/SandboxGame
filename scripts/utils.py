@@ -16,4 +16,3 @@ def loadImage(path, convert=True, colorKey=(0, 0, 0), size=None):
         img = pg.transform.scale(img, size)
 
     return img
-

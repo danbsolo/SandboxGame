@@ -1,6 +1,6 @@
 import pygame as pg
 import sys
-from scripts.entities import PhysicsEntity, CloudEntity
+from scripts.entities import PhysicsEntity, PlayerEntity, CloudEntity
 from scripts.utils import loadImage
 import uuid
 from scripts.header import *
@@ -19,7 +19,7 @@ class Game:
         self.entities = []
 
         self.playerId = 0
-        self.player = PhysicsEntity(self, self.playerId, "player", (100, 100), (130, 146), imgPath='entities/toonLinkPixelTransparent.png', convert=False, colorKey=False)
+        self.playerEntity = PlayerEntity(self, self.playerId, "player", (100, 100), (130, 146), imgPath='entities/toonLinkPixelTransparent.png', convert=False, colorKey=False)
         
         for _ in range(30):
             sizeMultiplier = uniform(1, 5)
@@ -52,6 +52,7 @@ class Game:
                         self.horizontalMovement[self.playerId][0] = speed
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = speed
+                        self.playerEntity.img = pg.transform.flip(self.playerEntity.img, True, False)
                 elif event.type == pg.KEYUP:  # key released
                     if event.key == pg.K_UP:
                         self.verticalMovement[self.playerId][0] = 0
@@ -61,6 +62,7 @@ class Game:
                         self.horizontalMovement[self.playerId][0] = 0
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = 0
+                        self.playerEntity.img = pg.transform.flip(self.playerEntity.img, True, False)
 
             pg.display.update()  # update the display with any changes
             self.clock.tick(60)  # force loop to run at 60 fps
