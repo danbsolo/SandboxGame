@@ -21,12 +21,18 @@ class Game:
         self.playerId = 0
         self.playerEntity = PlayerEntity(self, self.playerId, "player", (100, 100), (130, 146), imgPath='entities/toonLinkPixelTransparent.png', convert=False, colorKey=False)
         
+        cloudOptions = {
+            "clouds/cloud_1.png": (55, 20),
+            "clouds/cloud_2.png": (39, 14),
+            "tiles/large_decor/2.png": (33, 44)
+        }
         for _ in range(30):
+            cloudPath = choice(list(cloudOptions.keys()))
             sizeMultiplier = uniform(1, 5)
-            sizeVar = (55 * sizeMultiplier, 20 * sizeMultiplier)
+            sizeVar = (cloudOptions[cloudPath][0] * sizeMultiplier, cloudOptions[cloudPath][1] * sizeMultiplier)
 
             CloudEntity(self, uuid.uuid4(), "cloud", (randint(0, SCREEN_WIDTH), randint(0, SCREEN_HEIGHT)),
-                        sizeVar, (randint(2, 10), 0), 'clouds/cloud_1.png'
+                        sizeVar, (randint(2, 10), 0), cloudPath
                         )
 
     def run(self):

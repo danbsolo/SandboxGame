@@ -56,4 +56,3 @@ class CloudEntity(PhysicsEntity):
             self.setVelocity((randint(2, 10), 0))
         else:
             PhysicsEntity.update(self)
-    
