@@ -1,38 +1,72 @@
 import pygame as pg
 import sys
+from scripts.entities import PhysicsEntity
+from scripts.utils import loadImage
+from random import randint, uniform
+import uuid
 
 class Game:
     def __init__(self):        
         pg.init()
-        pg.display.set_caption("Ninja Game!")
-        self.screen = pg.display.set_mode((640, 480))  # create the window
+        pg.display.set_caption("Sandbox Game!")
+        
+        self.screenWidth = 640
+        self.screenHeight = 480
+        
+        self.screen = pg.display.set_mode((self.screenWidth, self.screenHeight))  # create the window
         self.clock = pg.time.Clock()
+        
+        self.player = PhysicsEntity(self, "player", (100, 100), None)
+        
+        self.cloudEntities = []
+        for _ in range(30):
+            self.cloudEntities.append(
+                PhysicsEntity(self, 
+                              f"cloud{uuid.uuid4()}", 
+                              (randint(0, self.screenWidth), randint(0, self.screenHeight)),
+                               None,
+                               (randint(2, 10), 0)
+                               )
+                )
 
-        self.img = pg.image.load('data/images/entities/toonLinkPixelTransparent.png')
-        self.img = pg.transform.scale(self.img, (130, 146))
-        # self.img.set_colorkey((0, 0, 0))  # make black pixels transparent
-        self.imgPos = [260, 100]
-        self.imgMovX = [False, False]  # [left, right]
-        self.imgMovY = [False, False]  # [up, down]
+        self.entities = [self.player]
+        self.entities.extend(self.cloudEntities)
 
-        self.collisionArea = pg.Rect(500, 300, 100, 100)
+        self.assets = {}
+
+        self.horizontalMovement = {
+            "player": [0, 0]
+        }
+
+        self.verticalMovement = {
+            "player": [0, 0]
+        }
+
+        for cloudEntity in self.cloudEntities:
+            sizeMultiplier = uniform(1, 5)
+            sizeVar = (55 * sizeMultiplier, 20 * sizeMultiplier)
+            cloudEntity.setSize(sizeVar)
+
+            self.assets[cloudEntity.entityType] = loadImage('clouds/cloud_1.png', size=sizeVar)
+            self.horizontalMovement[cloudEntity.entityType] = [0, 0]
+            self.verticalMovement[cloudEntity.entityType] = [0, 0]
+
+        self.assets["player"] = loadImage('entities/toonLinkPixelTransparent.png', False, None, (130, 146))
 
     def run(self):
         while True:
-            self.screen.fill((14, 219, 248))  # (14, 219, 248) -> sky blue
+            self.screen.fill((14, 219, 248))  # resets screen # sky blue 
 
-            speed = 13
-            self.imgPos[1] += (self.imgMovY[1] * speed) - (self.imgMovY[0] * speed)  # True == 1. False == 0.
-            self.imgPos[0] += (self.imgMovX[1] * speed) - (self.imgMovX[0] * speed)  # True == 1. False == 0.
+            for cloudEntity in self.cloudEntities:
+                if cloudEntity.pos[0] >= self.screenWidth:
+                    cloudEntity.teleport((0 - cloudEntity.size[0], randint(0, self.screenHeight)))
+                    cloudEntity.changeVelocity((randint(2, 10), 0))
 
-            imgHitbox = pg.Rect(self.imgPos[0], self.imgPos[1], self.img.get_width(), self.img.get_height())
+            for entity in self.entities:
+                entity.update()
+                entity.render(self.screen)
 
-            if imgHitbox.colliderect(self.collisionArea):
-                pg.draw.rect(self.screen, (150, 0, 0), self.collisionArea)
-            else:
-                pg.draw.rect(self.screen, (150, 100, 0), self.collisionArea)
-
-            self.screen.blit(self.img, self.imgPos)
+            speed = 5
 
             for event in pg.event.get():  # get user input
                 if event.type == pg.QUIT:
@@ -40,22 +74,22 @@ class Game:
                     sys.exit()
                 elif event.type == pg.KEYDOWN:  # key pressed
                     if event.key == pg.K_UP:
-                        self.imgMovY[0] = True
+                        self.verticalMovement["player"][0] = speed
                     elif event.key == pg.K_DOWN:
-                        self.imgMovY[1] = True
+                        self.verticalMovement["player"][1] = speed
                     elif event.key == pg.K_LEFT:
-                        self.imgMovX[0] = True
+                        self.horizontalMovement["player"][0] = speed
                     elif event.key == pg.K_RIGHT:
-                        self.imgMovX[1] = True
+                        self.horizontalMovement["player"][1] = speed
                 elif event.type == pg.KEYUP:  # key released
                     if event.key == pg.K_UP:
-                        self.imgMovY[0] = False
+                        self.verticalMovement["player"][0] = 0
                     elif event.key == pg.K_DOWN:
-                        self.imgMovY[1] = False
+                        self.verticalMovement["player"][1] = 0
                     elif event.key == pg.K_LEFT:
-                        self.imgMovX[0] = False
+                        self.horizontalMovement["player"][0] = 0
                     elif event.key == pg.K_RIGHT:
-                        self.imgMovX[1] = False
+                        self.horizontalMovement["player"][1] = 0
 
             pg.display.update()  # update the display with any changes
             self.clock.tick(60)  # force loop to run at 60 fps
