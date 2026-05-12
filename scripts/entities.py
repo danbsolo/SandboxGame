@@ -44,15 +44,23 @@ class PhysicsEntity:
 class PlayerEntity(PhysicsEntity):
     def __init__(self, game, id, entityType, pos, size, velocity=[0, 0], imgPath=None, convert=True, colorKey=(0, 0, 0)):
         PhysicsEntity.__init__(self, game, id, entityType, pos, size, velocity, imgPath, convert, colorKey)
+    
+    def update(self):
+        self.pos[0] += self.game.horizontalMovement[self.id][1] - self.game.horizontalMovement[self.id][0] + self.velocity[0]
+        yPos = self.game.verticalMovement[self.id][1] - self.game.verticalMovement[self.id][0] + self.velocity[1]
+        if (250 <= (self.pos[1] + yPos) and (self.pos[1] + yPos) <= (SCREEN_HEIGHT - self.size[1])):
+            self.pos[1] += yPos
 
 
-class CloudEntity(PhysicsEntity):
-    def __init__(self, game, id, entityType, pos, size, velocity=[0, 0], imgPath=None, convert=True, colorKey=(0, 0, 0)):
+class BackgroundEntity(PhysicsEntity):
+    def __init__(self, game, id, entityType, pos, size, velocity=[0, 0], imgPath=None, convert=True, colorKey=(0, 0, 0), minPosY=0, maxPosY=SCREEN_HEIGHT):
         PhysicsEntity.__init__(self, game, id, entityType, pos, size, velocity, imgPath, convert, colorKey)
+        self.minPosY = minPosY
+        self.maxPosY = maxPosY
 
     def update(self):
         if self.pos[0] >= SCREEN_WIDTH:
-            self.teleport((0 - self.size[0], randint(0, SCREEN_HEIGHT)))
-            self.setVelocity((randint(2, 10), 0))
+            self.teleport((0 - self.size[0], randint(self.minPosY, self.maxPosY)))
+            self.setVelocity(self.velocity)
         else:
             PhysicsEntity.update(self)

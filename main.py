@@ -1,6 +1,6 @@
 import pygame as pg
 import sys
-from scripts.entities import PhysicsEntity, PlayerEntity, CloudEntity
+from scripts.entities import PhysicsEntity, PlayerEntity, BackgroundEntity
 from scripts.utils import loadImage
 import uuid
 from scripts.header import *
@@ -19,25 +19,41 @@ class Game:
         self.entities = []
 
         self.playerId = 0
-        self.playerEntity = PlayerEntity(self, self.playerId, "player", (100, 100), (130, 146), imgPath='entities/toonLinkPixelTransparent.png', convert=False, colorKey=False)
+        self.playerEntity = PlayerEntity(self, self.playerId, "player", (SCREEN_WIDTH-200, SCREEN_HEIGHT-200), (130, 146), imgPath='entities/toonLinkPixelTransparent.png', convert=False, colorKey=False)
         
-        cloudOptions = {
-            "clouds/cloud_1.png": (55, 20),
-            "clouds/cloud_2.png": (39, 14),
+        treeOptions = {
             "tiles/large_decor/2.png": (33, 44)
         }
-        for _ in range(30):
-            cloudPath = choice(list(cloudOptions.keys()))
+        for _ in range(50):
+            treePath = choice(list(treeOptions.keys()))
             sizeMultiplier = uniform(1, 5)
+            sizeVar = (treeOptions[treePath][0] * sizeMultiplier, treeOptions[treePath][1] * sizeMultiplier)
+
+            BackgroundEntity(self, uuid.uuid4(), "movingBackground", (randint(0, SCREEN_WIDTH), randint(250, SCREEN_HEIGHT)),
+                        sizeVar, (5, 0), treePath,
+                        minPosY=250, maxPosY=SCREEN_HEIGHT
+                        )
+        cloudOptions = {
+            "clouds/cloud_1.png": (55, 20),
+            "clouds/cloud_2.png": (39, 14)
+        }
+        for _ in range (10):
+            cloudPath = choice(list(cloudOptions.keys()))
+            sizeMultiplier = uniform(1, 3)
             sizeVar = (cloudOptions[cloudPath][0] * sizeMultiplier, cloudOptions[cloudPath][1] * sizeMultiplier)
 
-            CloudEntity(self, uuid.uuid4(), "cloud", (randint(0, SCREEN_WIDTH), randint(0, SCREEN_HEIGHT)),
-                        sizeVar, (randint(2, 10), 0), cloudPath
+            BackgroundEntity(self, uuid.uuid4(), "movingBackground", (randint(0, SCREEN_WIDTH), randint(0, 200)),
+                        sizeVar, (randint(1, 5), 0), cloudPath,
+                        minPosY=0, maxPosY=200
                         )
 
     def run(self):
         while True:
-            self.screen.fill((14, 219, 248))  # resets screen # sky blue 
+            self.screen.fill((51, 150, 0))  # resets screen # sky blue 
+
+            pg.draw.rect(self.screen, (14, 219, 248), (0, 0, SCREEN_WIDTH, 250))
+            pg.draw.circle(self.screen, (255, 255, 51), (75, 75), 50)
+
 
             for entity in self.entities:
                 entity.update()
