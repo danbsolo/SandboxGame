@@ -1,4 +1,5 @@
 import pygame as pg
+import os
 
 BASE_IMG_PATH = "data/images/"
 
@@ -16,3 +17,9 @@ def loadImage(path, convert=True, colorKey=(0, 0, 0), size=None):
         img = pg.transform.scale(img, size)
 
     return img
+
+def loadImages(path):
+    images = []
+    for imgName in sorted(os.listdir(BASE_IMG_PATH + path)):
+        images.append(loadImage(os.path.join(path, imgName)))
+    return images

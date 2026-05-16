@@ -2,6 +2,8 @@ import pygame as pg
 import sys
 from scripts.entities import PhysicsEntity, PlayerEntity # BackgroundEntity
 from scripts.header import *
+from scripts.utils import *
+from scripts.tileMap import TileMap
 
 class Game:
     def __init__(self):        
@@ -9,37 +11,38 @@ class Game:
         pg.display.set_caption("Sandbox Game!")
         
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # create the window
+        self.container = pg.Surface((SCREEN_WIDTH/4, SCREEN_HEIGHT/4))
+
         self.clock = pg.time.Clock()
         
-        self.assets = {}
+        self.assets = {
+            "decor": loadImages("tiles/decor"),
+            "grass": loadImages("tiles/grass"),
+            "large_decor": loadImages("tiles/large_decor"),
+            "stone": loadImages("tiles/stone")
+        }
+
         self.horizontalMovement = {}
         self.verticalMovement = {}
-        self.entities = []
 
         self.playerId = 0
-        self.playerEntity = PlayerEntity(self, self.playerId, "player", (SCREEN_WIDTH-200, SCREEN_HEIGHT-200), (130, 146), imgPath='entities/toonLinkPixelTransparent.png', convert=False, colorKey=False)
+        self.playerEntity = PlayerEntity(self, self.playerId, "player", (50, 50), (8, 15), imgPath='entities/player.png', convert=False, colorKey=False)
+
+        self.tileMap = TileMap(self, 16)
+
 
     def run(self):
         while True:
-            self.screen.fill((51, 150, 0))  # resets screen # sky blue 
+            self.container.fill((51, 150, 0))  # resets screen
 
-            pg.draw.rect(self.screen, (14, 219, 248), (0, 0, SCREEN_WIDTH, 250))
-            pg.draw.circle(self.screen, (255, 255, 51), (75, 75), 50)
-            pg.draw.rect(self.screen, (255, 255, 51), (66, 150, 18, 70), border_radius=10)
-            pg.draw.rect(self.screen, (255, 255, 51), (150, 41, 70, 18), border_radius=10)
-            
-            # Angled rectangle
-            rectVar = pg.Rect((125, 140, 85, 18))
-            shape_surf = pg.Surface(rectVar.size, pg.SRCALPHA)
-            pg.draw.rect(shape_surf, (255, 255, 51), (0, 0, *rectVar.size), 0, border_radius=10)
-            rotated_surf = pg.transform.rotate(shape_surf, 315)
-            self.screen.blit(rotated_surf, rotated_surf.get_rect(center = rectVar.center))
+            self.tileMap.render(self.container)
 
-            for entity in self.entities:
-                entity.update()
-                entity.render(self.screen)
+            self.playerEntity.update(self.tileMap)
+            self.playerEntity.render(self.container)
 
-            speed = 5
+            speed = 1
+
+            #print(self.tileMap.physicsRectsSurrounding(self.playerEntity.pos))
 
             for event in pg.event.get():  # get user input
                 if event.type == pg.QUIT:
@@ -54,7 +57,6 @@ class Game:
                         self.horizontalMovement[self.playerId][0] = speed
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = speed
-                        self.playerEntity.img = pg.transform.flip(self.playerEntity.img, True, False)
                 elif event.type == pg.KEYUP:  # key released
                     if event.key == pg.K_UP:
                         self.verticalMovement[self.playerId][0] = 0
@@ -64,11 +66,11 @@ class Game:
                         self.horizontalMovement[self.playerId][0] = 0
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = 0
-                        self.playerEntity.img = pg.transform.flip(self.playerEntity.img, True, False)
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     print(f"Mouse clicked: ({x}, {y})")
 
+            self.screen.blit(pg.transform.scale(self.container, (SCREEN_WIDTH, SCREEN_HEIGHT)))
             pg.display.update()  # update the display with any changes
             self.clock.tick(60)  # force loop to run at 60 fps
 
