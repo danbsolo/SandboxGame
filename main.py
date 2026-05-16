@@ -53,7 +53,18 @@ class Game:
 
             pg.draw.rect(self.screen, (14, 219, 248), (0, 0, SCREEN_WIDTH, 250))
             pg.draw.circle(self.screen, (255, 255, 51), (75, 75), 50)
-
+            pg.draw.rect(self.screen, (255, 255, 51), (66, 150, 18, 70), border_radius=10)
+            pg.draw.rect(self.screen, (255, 255, 51), (150, 41, 70, 18), border_radius=10)
+            
+            #
+            #rectVar = pg.draw.rect(self.screen, (255, 255, 51), (125, 125, 70, 18), border_radius=10)
+            
+            rectVar = pg.Rect((125, 140, 85, 18))
+            shape_surf = pg.Surface(rectVar.size, pg.SRCALPHA)
+            pg.draw.rect(shape_surf, (255, 255, 51), (0, 0, *rectVar.size), 0, border_radius=10)
+            rotated_surf = pg.transform.rotate(shape_surf, 315)
+            self.screen.blit(rotated_surf, rotated_surf.get_rect(center = rectVar.center))
+            #
 
             for entity in self.entities:
                 entity.update()
@@ -85,6 +96,9 @@ class Game:
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = 0
                         self.playerEntity.img = pg.transform.flip(self.playerEntity.img, True, False)
+                elif event.type == pg.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    print(f"Mouse clicked: ({x}, {y})")
 
             pg.display.update()  # update the display with any changes
             self.clock.tick(60)  # force loop to run at 60 fps
