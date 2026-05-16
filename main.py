@@ -56,15 +56,12 @@ class Game:
             pg.draw.rect(self.screen, (255, 255, 51), (66, 150, 18, 70), border_radius=10)
             pg.draw.rect(self.screen, (255, 255, 51), (150, 41, 70, 18), border_radius=10)
             
-            #
-            #rectVar = pg.draw.rect(self.screen, (255, 255, 51), (125, 125, 70, 18), border_radius=10)
-            
+            # Angled rectangle
             rectVar = pg.Rect((125, 140, 85, 18))
             shape_surf = pg.Surface(rectVar.size, pg.SRCALPHA)
             pg.draw.rect(shape_surf, (255, 255, 51), (0, 0, *rectVar.size), 0, border_radius=10)
             rotated_surf = pg.transform.rotate(shape_surf, 315)
             self.screen.blit(rotated_surf, rotated_surf.get_rect(center = rectVar.center))
-            #
 
             for entity in self.entities:
                 entity.update()
