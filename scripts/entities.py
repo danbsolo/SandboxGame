@@ -49,6 +49,16 @@ class PlayerEntity(PhysicsEntity):
         PhysicsEntity.__init__(self, game, id, entityType, pos, size, velocity, imgPath, convert, colorKey)
         self.isGrounded = None
         self.isUpright = True
+        self.initialPosition = (70, 70)
+
+    def resetPosition(self):
+        self.pos = list(self.initialPosition)
+        if not self.isUpright:
+            self.flipGravity()
+
+    def flipGravity(self):
+        self.isUpright = not self.isUpright
+        self.img = pg.transform.flip(self.img, flip_x=False, flip_y=True)
 
     def getCollisionRect(self):
         return pg.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])

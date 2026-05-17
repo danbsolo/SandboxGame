@@ -11,7 +11,7 @@ class Game:
         pg.display.set_caption("Sandbox Game!")
         
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # create the window
-        self.container = pg.Surface((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+        self.container = pg.Surface((SCREEN_WIDTH/2.5, SCREEN_HEIGHT/2.5))
 
         self.clock = pg.time.Clock()
         
@@ -34,7 +34,7 @@ class Game:
 
     def run(self):
         while True:
-            self.container.fill((51, 150, 0))  # resets screen
+            self.container.fill((14, 140, 160))  # resets screen
 
             self.tileMap.render(self.container)
 
@@ -56,8 +56,9 @@ class Game:
                         self.horizontalMovement[self.playerId][1] = speed
                     elif event.key == pg.K_UP:
                         if self.playerEntity.isGrounded:
-                            self.playerEntity.isUpright = not self.playerEntity.isUpright
-                            self.playerEntity.img = pg.transform.flip(self.playerEntity.img, flip_x=False, flip_y=True)
+                            self.playerEntity.flipGravity()
+                    elif event.key == pg.K_SPACE:
+                        self.playerEntity.resetPosition()
                 elif event.type == pg.KEYUP:  # key released
                     if event.key == pg.K_LEFT:
                         self.horizontalMovement[self.playerId][0] = 0
