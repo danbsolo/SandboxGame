@@ -18,8 +18,8 @@ def loadImage(path, convert=True, colorKey=(0, 0, 0), size=None):
 
     return img
 
-def loadImages(path):
+def loadImages(path, width, height):  # assumes square
     images = []
     for imgName in sorted(os.listdir(BASE_IMG_PATH + path)):
-        images.append(loadImage(os.path.join(path, imgName)))
+        images.append(loadImage(os.path.join(path, imgName), size=(width, height)))
     return images

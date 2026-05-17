@@ -11,24 +11,25 @@ class Game:
         pg.display.set_caption("Sandbox Game!")
         
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # create the window
-        self.container = pg.Surface((SCREEN_WIDTH/4, SCREEN_HEIGHT/4))
+        self.container = pg.Surface((SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
 
         self.clock = pg.time.Clock()
         
+        tileSize = 20
         self.assets = {
-            "decor": loadImages("tiles/decor"),
-            "grass": loadImages("tiles/grass"),
-            "large_decor": loadImages("tiles/large_decor"),
-            "stone": loadImages("tiles/stone")
+            "decor": loadImages("tiles/decor", tileSize, tileSize),
+            "grass": loadImages("tiles/grass", tileSize, tileSize),
+            "large_decor": loadImages("tiles/large_decor", tileSize, tileSize),
+            "stone": loadImages("tiles/stone", tileSize, tileSize)
         }
 
         self.horizontalMovement = {}
         self.verticalMovement = {}
 
         self.playerId = 0
-        self.playerEntity = PlayerEntity(self, self.playerId, "player", (50, 50), (8, 15), imgPath='entities/player.png', convert=False, colorKey=False)
+        self.playerEntity = PlayerEntity(self, self.playerId, "player", (70, 70), (8, 15), imgPath='entities/player.png', convert=False, colorKey=False)
 
-        self.tileMap = TileMap(self, 16)
+        self.tileMap = TileMap(self, tileSize)
 
 
     def run(self):
@@ -49,24 +50,21 @@ class Game:
                     pg.quit()
                     sys.exit()
                 elif event.type == pg.KEYDOWN:  # key pressed
-                    if event.key == pg.K_UP:
-                        self.playerEntity.velocity[1] = -3
-                        #self.verticalMovement[self.playerId][0] = 3
-                    elif event.key == pg.K_DOWN:
-                       self.verticalMovement[self.playerId][1] = 10
-                    elif event.key == pg.K_LEFT:
+                    if event.key == pg.K_LEFT:
                         self.horizontalMovement[self.playerId][0] = speed
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = speed
+                    elif event.key == pg.K_UP:
+                        if self.playerEntity.isGrounded:
+                            self.playerEntity.isUpright = not self.playerEntity.isUpright
+                            self.playerEntity.img = pg.transform.flip(self.playerEntity.img, flip_x=False, flip_y=True)
                 elif event.type == pg.KEYUP:  # key released
-                    #if event.key == pg.K_UP:
-                    #    self.verticalMovement[self.playerId][0] = 0
-                    if event.key == pg.K_DOWN:
-                       self.verticalMovement[self.playerId][1] = 0
-                    elif event.key == pg.K_LEFT:
+                    if event.key == pg.K_LEFT:
                         self.horizontalMovement[self.playerId][0] = 0
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = 0
+                    # elif event.key == pg.K_UP:
+                    #   self.playerEntity.isUpright = not self.playerEntity.isUpright
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     print(f"Mouse clicked: ({x}, {y})")

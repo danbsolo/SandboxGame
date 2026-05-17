@@ -16,6 +16,7 @@ class TileMap:
 
         for i in range(10):
             self.tileMap[f"{str(3 + i)};10"] = {"tileType": "grass", "variant": 1, "pos": (3 + i, 10)}
+            self.tileMap[f"{str(3 + i)};1"] = {"tileType": "grass", "variant": 2, "pos": (3 + i, 1)}
             self.tileMap[f"13;{str(1 + i)}"] = {"tileType": "stone", "variant": 1, "pos": (13, 1 + i)}
             
             # We're representing coordinates with a string instead of a tuple to make some future process easier for the sake of the tutorial

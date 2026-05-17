@@ -47,6 +47,8 @@ class PhysicsEntity:
 class PlayerEntity(PhysicsEntity):
     def __init__(self, game, id, entityType, pos, size=None, velocity=[0, 0], imgPath=None, convert=True, colorKey=(0, 0, 0)):
         PhysicsEntity.__init__(self, game, id, entityType, pos, size, velocity, imgPath, convert, colorKey)
+        self.isGrounded = None
+        self.isUpright = True
 
     def getCollisionRect(self):
         return pg.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
@@ -81,10 +83,16 @@ class PlayerEntity(PhysicsEntity):
                     self.collisions["up"] = True
                 self.pos[1] = entityRect.y
 
-        self.velocity[1] = min(5, self.velocity[1] + 0.1)  # terminal velocity defines max speed
+        if self.isUpright:
+            self.velocity[1] = 5  # terminal velocity defines max speed
+        else:
+            self.velocity[1] = -5
 
         if self.collisions["up"] or self.collisions["down"]:
-            self.velocity[1] = 0
+            self.isGrounded = True
+            #self.velocity[1] = 0
+        else:
+            self.isGrounded = False
 
         
 # class BackgroundEntity(PhysicsEntity):
