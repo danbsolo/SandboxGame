@@ -15,7 +15,7 @@ class TileMap:
         self.offgridTiles = []
 
         for i in range(4):
-            self.tileMap[f"{str(0 + i)};12"] = {"tileType": "grass", "variant": 2, "pos": (0 + i, 12)}
+            self.tileMap[f"{str(0 + i)};18"] = {"tileType": "grass", "variant": 2, "pos": (0 + i, 18)}
 
             self.tileMap[f"{str(3 + i)};10"] = {"tileType": "grass", "variant": 1, "pos": (3 + i, 10)}
             self.tileMap[f"{str(3 + i)};1"] = {"tileType": "grass", "variant": 2, "pos": (3 + i, 1)}

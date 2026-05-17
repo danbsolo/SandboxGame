@@ -66,6 +66,10 @@ class PlayerEntity(PhysicsEntity):
     def update(self, tileMap):
         self.collisions = {"up": False, "down": False, "left": False, "right": False}
 
+        if not (0 < self.pos[0] and self.pos[0] < SCREEN_WIDTH/CONTAINER_DIVIDER) or not (0 < self.pos[1] and self.pos[1] < SCREEN_HEIGHT/CONTAINER_DIVIDER):
+            self.resetPosition()
+            return
+
         frameMovement = (self.game.horizontalMovement[self.id][1] - self.game.horizontalMovement[self.id][0] + self.velocity[0],
                          self.game.verticalMovement[self.id][1] - self.game.verticalMovement[self.id][0] + self.velocity[1]) 
 

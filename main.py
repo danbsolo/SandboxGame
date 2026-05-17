@@ -11,7 +11,7 @@ class Game:
         pg.display.set_caption("Sandbox Game!")
         
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # create the window
-        self.container = pg.Surface((SCREEN_WIDTH/2.5, SCREEN_HEIGHT/2.5))
+        self.container = pg.Surface((SCREEN_WIDTH/CONTAINER_DIVIDER, SCREEN_HEIGHT/CONTAINER_DIVIDER))
 
         self.clock = pg.time.Clock()
         
