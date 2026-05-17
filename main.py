@@ -40,7 +40,7 @@ class Game:
             self.playerEntity.update(self.tileMap)
             self.playerEntity.render(self.container)
 
-            speed = 1
+            speed = 4
 
             #print(self.tileMap.physicsRectsSurrounding(self.playerEntity.pos))
 
@@ -50,18 +50,19 @@ class Game:
                     sys.exit()
                 elif event.type == pg.KEYDOWN:  # key pressed
                     if event.key == pg.K_UP:
-                        self.verticalMovement[self.playerId][0] = speed
+                        self.playerEntity.velocity[1] = -3
+                        #self.verticalMovement[self.playerId][0] = 3
                     elif event.key == pg.K_DOWN:
-                        self.verticalMovement[self.playerId][1] = speed
+                       self.verticalMovement[self.playerId][1] = 10
                     elif event.key == pg.K_LEFT:
                         self.horizontalMovement[self.playerId][0] = speed
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = speed
                 elif event.type == pg.KEYUP:  # key released
-                    if event.key == pg.K_UP:
-                        self.verticalMovement[self.playerId][0] = 0
-                    elif event.key == pg.K_DOWN:
-                        self.verticalMovement[self.playerId][1] = 0
+                    #if event.key == pg.K_UP:
+                    #    self.verticalMovement[self.playerId][0] = 0
+                    if event.key == pg.K_DOWN:
+                       self.verticalMovement[self.playerId][1] = 0
                     elif event.key == pg.K_LEFT:
                         self.horizontalMovement[self.playerId][0] = 0
                     elif event.key == pg.K_RIGHT:
