@@ -1,6 +1,6 @@
 import pygame as pg
 import sys
-from scripts.entities import PhysicsEntity, PlayerEntity # BackgroundEntity
+from scripts.entities import PlayerEntity
 from scripts.header import *
 from scripts.utils import *
 from scripts.tileMap import TileMap
