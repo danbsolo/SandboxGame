@@ -20,8 +20,11 @@ class Game:
             "grass": loadImages("tiles/grass", TILE_SIZE, TILE_SIZE),
             #"large_decor": loadImages("tiles/large_decor", TILE_SIZE, TILE_SIZE),
             "stone": loadImages("tiles/stone", TILE_SIZE, TILE_SIZE),
-            "spikes": loadImages("tiles/spikes", TILE_SIZE, TILE_SIZE)
+            "spikes": loadImages("tiles/spikes", TILE_SIZE, TILE_SIZE),
+            "victory": loadImages("tiles/victory", TILE_SIZE, TILE_SIZE)
         }
+
+        self.victoryAchieved = False
 
         self.horizontalMovement = {}
         self.verticalMovement = {}
@@ -43,7 +46,9 @@ class Game:
 
             speed = 4
 
-            #print(self.tileMap.physicsRectsSurrounding(self.playerEntity.pos))
+            if self.victoryAchieved:
+                text_surface = pg.font.SysFont('arialrounded', 50, bold=True).render('GGs!', True, (0, 0, 0))
+                self.container.blit(text_surface, (1154 / CONTAINER_DIVIDER, 644 / CONTAINER_DIVIDER))
 
             for event in pg.event.get():  # get user input
                 if event.type == pg.QUIT:
@@ -64,8 +69,6 @@ class Game:
                         self.horizontalMovement[self.playerId][0] = 0
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = 0
-                    # elif event.key == pg.K_UP:
-                    #   self.playerEntity.isUpright = not self.playerEntity.isUpright
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     x, y = event.pos
                     print(f"Mouse clicked: ({x}, {y}) -> ({x // CONTAINER_DIVIDER // TILE_SIZE}, {y // CONTAINER_DIVIDER // TILE_SIZE})")

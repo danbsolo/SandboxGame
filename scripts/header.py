@@ -9,8 +9,9 @@ CONTAINER_DIVIDER = 2
 NEIGHBOUR_OFFSETS = [(-1, -1), (0, -1), (1, -1),
                     (-1, 0), (0, 0), (1, 0),
                     (-1, 1), (0, 1), (1, 1)]
-PHYSICS_TILES = {"grass", "stone", "spikes"}
+PHYSICS_TILES = {"grass", "stone", "spikes", "victory"}
 DEATH_TILES = {"spikes"}
+VICTORY_TILES = {"victory"}
 TILEMAP_PATH = "data/maps/"
 
 TILE_SIZE = 20

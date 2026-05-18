@@ -82,6 +82,9 @@ class PlayerEntity(PhysicsEntity):
                     if tile["tileType"] in DEATH_TILES:
                         self.resetPosition()
                         return
+                    if tile["tileType"] in VICTORY_TILES:
+                        self.game.victoryAchieved = True
+                        continue
                     if frameMovement[0] > 0: # if moving right and colliding with a tile
                         entityRect.right = physicsRect.left
                         self.collisions["right"] = True
@@ -99,26 +102,16 @@ class PlayerEntity(PhysicsEntity):
                     if tile["tileType"] in DEATH_TILES:
                         self.resetPosition()
                         return
-                    if frameMovement[1] > 0: # if moving right and colliding with a tile
+                    if tile["tileType"] in VICTORY_TILES:
+                        self.game.victoryAchieved = True
+                        continue
+                    if frameMovement[1] > 0: # if moving down and colliding with a tile
                         entityRect.bottom = physicsRect.top
                         self.collisions["down"] = True
                     if frameMovement[1] < 0:
                         entityRect.top = physicsRect.bottom
                         self.collisions["up"] = True
                     self.pos[1] = entityRect.y
-
-
-        # self.pos[1] += frameMovement[1]
-        # entityRect = self.getCollisionRect()  
-        # for physicsRect in tileMap.physicsRectsSurrounding(self.pos):
-        #     if entityRect.colliderect(physicsRect):
-        #         if frameMovement[1] > 0:
-        #             entityRect.bottom = physicsRect.top
-        #             self.collisions["down"] = True
-        #         if frameMovement[1] < 0:
-        #             entityRect.top = physicsRect.bottom
-        #             self.collisions["up"] = True
-        #         self.pos[1] = entityRect.y
 
         if self.isUpright:
             self.velocity[1] = 5  # terminal velocity defines max speed
@@ -130,9 +123,4 @@ class PlayerEntity(PhysicsEntity):
             #self.velocity[1] = 0
         else:
             self.isGrounded = False
-
-        
-# class BackgroundEntity(PhysicsEntity):
-#     def __init__(self, game, id, entityType, pos, size, velocity=[0, 0], imgPath=None, convert=True, colorKey=(0, 0, 0), minPosY=0, maxPosY=SCREEN_HEIGHT):
-#         PhysicsEntity.__init__(self, game, id, entityType, pos, size, velocity, imgPath, convert, colorKey)
 
