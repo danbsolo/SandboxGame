@@ -4,6 +4,7 @@ from scripts.entities import PlayerEntity
 from scripts.header import *
 from scripts.utils import *
 from scripts.tileMap import TileMap
+import asyncio
 
 class Game:
     def __init__(self):        
@@ -35,7 +36,7 @@ class Game:
         self.tileMap = TileMap(self, 4)
 
 
-    def run(self):
+    async def run(self):
         while True:
             self.container.fill((14, 140, 160))  # resets screen
 
@@ -59,7 +60,7 @@ class Game:
                         self.horizontalMovement[self.playerId][0] = speed
                     elif event.key == pg.K_RIGHT:
                         self.horizontalMovement[self.playerId][1] = speed
-                    elif event.key == pg.K_UP:
+                    elif event.key == pg.K_UP or event.key == pg.K_SPACE:
                         if self.playerEntity.isGrounded:
                             self.playerEntity.flipGravity()
                     elif event.key == pg.K_SPACE:
@@ -76,12 +77,9 @@ class Game:
             self.screen.blit(pg.transform.scale(self.container, (SCREEN_WIDTH, SCREEN_HEIGHT)))
             pg.display.update()  # update the display with any changes
             self.clock.tick(60)  # force loop to run at 60 fps
+            await asyncio.sleep(0)
 
 
-def main():
-    game = Game()
-    game.run()
 
-
-if __name__ == "__main__":
-    main()
+game = Game()
+asyncio.run(game.run())
