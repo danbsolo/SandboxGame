@@ -16,6 +16,7 @@ class TileMap:
 
         for i in range(4):
             self.tileMap[f"{str(0 + i)};18"] = {"tileType": "grass", "variant": 2, "pos": (0 + i, 18)}
+            self.tileMap[f"{str(5 + i)};18"] = {"tileType": "grass", "variant": 2, "pos": (5 + i, 18)}
 
             self.tileMap[f"{str(3 + i)};10"] = {"tileType": "grass", "variant": 1, "pos": (3 + i, 10)}
             self.tileMap[f"{str(3 + i)};1"] = {"tileType": "grass", "variant": 2, "pos": (3 + i, 1)}
