@@ -8,7 +8,7 @@ from scripts.tileMap import TileMap
 class Game:
     def __init__(self):        
         pg.init()
-        pg.display.set_caption("Sandbox Game!")
+        pg.display.set_caption("UUUUU")
         
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  # create the window
         self.container = pg.Surface((SCREEN_WIDTH/CONTAINER_DIVIDER, SCREEN_HEIGHT/CONTAINER_DIVIDER))
