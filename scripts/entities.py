@@ -49,10 +49,10 @@ class PlayerEntity(PhysicsEntity):
         PhysicsEntity.__init__(self, game, id, entityType, pos, size, velocity, imgPath, convert, colorKey)
         self.isGrounded = None
         self.isUpright = True
-        self.initialPosition = (70, 70)
+        self.checkpointPosition = pos
 
     def resetPosition(self):
-        self.pos = list(self.initialPosition)
+        self.pos = list(self.checkpointPosition)
         if not self.isUpright:
             self.flipGravity()
 
@@ -75,27 +75,50 @@ class PlayerEntity(PhysicsEntity):
 
         self.pos[0] += frameMovement[0]
         entityRect = self.getCollisionRect()
-        for physicsRect in tileMap.physicsRectsSurrounding(self.pos):
-            if entityRect.colliderect(physicsRect):
-                if frameMovement[0] > 0: # if moving right and colliding with a tile
-                    entityRect.right = physicsRect.left
-                    self.collisions["right"] = True
-                if frameMovement[0] < 0:
-                    entityRect.left = physicsRect.right
-                    self.collisions["left"] = True
-                self.pos[0] = entityRect.x
-                
+        for tile in tileMap.tilesSurrounding(self.pos):
+            if tile["tileType"] in PHYSICS_TILES:
+                physicsRect = pg.Rect(tile["pos"][0] * TILE_SIZE, tile["pos"][1] * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                if entityRect.colliderect(physicsRect):
+                    if tile["tileType"] in DEATH_TILES:
+                        self.resetPosition()
+                        return
+                    if frameMovement[0] > 0: # if moving right and colliding with a tile
+                        entityRect.right = physicsRect.left
+                        self.collisions["right"] = True
+                    if frameMovement[0] < 0:
+                        entityRect.left = physicsRect.right
+                        self.collisions["left"] = True
+                    self.pos[0] = entityRect.x
+
         self.pos[1] += frameMovement[1]
-        entityRect = self.getCollisionRect()  
-        for physicsRect in tileMap.physicsRectsSurrounding(self.pos):
-            if entityRect.colliderect(physicsRect):
-                if frameMovement[1] > 0:
-                    entityRect.bottom = physicsRect.top
-                    self.collisions["down"] = True
-                if frameMovement[1] < 0:
-                    entityRect.top = physicsRect.bottom
-                    self.collisions["up"] = True
-                self.pos[1] = entityRect.y
+        entityRect = self.getCollisionRect()
+        for tile in tileMap.tilesSurrounding(self.pos):
+            if tile["tileType"] in PHYSICS_TILES:
+                physicsRect = pg.Rect(tile["pos"][0] * TILE_SIZE, tile["pos"][1] * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                if entityRect.colliderect(physicsRect):
+                    if tile["tileType"] in DEATH_TILES:
+                        self.resetPosition()
+                        return
+                    if frameMovement[1] > 0: # if moving right and colliding with a tile
+                        entityRect.bottom = physicsRect.top
+                        self.collisions["down"] = True
+                    if frameMovement[1] < 0:
+                        entityRect.top = physicsRect.bottom
+                        self.collisions["up"] = True
+                    self.pos[1] = entityRect.y
+
+
+        # self.pos[1] += frameMovement[1]
+        # entityRect = self.getCollisionRect()  
+        # for physicsRect in tileMap.physicsRectsSurrounding(self.pos):
+        #     if entityRect.colliderect(physicsRect):
+        #         if frameMovement[1] > 0:
+        #             entityRect.bottom = physicsRect.top
+        #             self.collisions["down"] = True
+        #         if frameMovement[1] < 0:
+        #             entityRect.top = physicsRect.bottom
+        #             self.collisions["up"] = True
+        #         self.pos[1] = entityRect.y
 
         if self.isUpright:
             self.velocity[1] = 5  # terminal velocity defines max speed

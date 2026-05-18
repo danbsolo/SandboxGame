@@ -1,48 +1,38 @@
 from scripts.header import *
-
-
-NEIGHBOUR_OFFSETS = [(-1, -1), (0, -1), (1, -1),
-                    (-1, 0), (0, 0), (1, 0),
-                    (-1, 1), (0, 1), (1, 1)]
-PHYSICS_TILES = {"grass", "stone"}
+import json
+import os
 
 
 class TileMap:
-    def __init__(self, game, tileSize=16):
+    def __init__(self, game, tileMapVariation):
         self.game = game
-        self.tileSize = tileSize
         self.tileMap = {}
         self.offgridTiles = []
 
-        for i in range(4):
-            self.tileMap[f"{str(0 + i)};18"] = {"tileType": "grass", "variant": 2, "pos": (0 + i, 18)}
-            self.tileMap[f"{str(5 + i)};18"] = {"tileType": "grass", "variant": 2, "pos": (5 + i, 18)}
-
-            self.tileMap[f"{str(3 + i)};10"] = {"tileType": "grass", "variant": 1, "pos": (3 + i, 10)}
-            self.tileMap[f"{str(3 + i)};1"] = {"tileType": "grass", "variant": 2, "pos": (3 + i, 1)}
-            self.tileMap[f"7;{str(1 + i)}"] = {"tileType": "stone", "variant": 1, "pos": (7, 1 + i)}
-            
-            # We're representing coordinates with a string instead of a tuple to make some future process easier for the sake of the tutorial
-            # This tile dictionary containing tile, variant, and pos could be encapsulated into a Tile class instead
+        with open(os.path.join(TILEMAP_PATH, f"{tileMapVariation}.json"), "r") as mapFile:
+            self.tileMap = json.load(mapFile)["tilemap"]
+        
+        # We're representing coordinates with a string instead of a tuple to make some future process easier for the sake of the tutorial
+        # This tile dictionary containing tile, variant, and pos could be encapsulated into a Tile class instead
     
     def tilesSurrounding(self, pos):
         surroundingTiles = []
-        tileLocation = (int(pos[0] // self.tileSize), int(pos[1] // self.tileSize))
+        tileLocation = (int(pos[0] // TILE_SIZE), int(pos[1] // TILE_SIZE))
         for offset in NEIGHBOUR_OFFSETS:
             checkLocation = f"{tileLocation[0] + offset[0]};{tileLocation[1] + offset[1]}"
             if checkLocation in self.tileMap:
                 surroundingTiles.append(self.tileMap[checkLocation])
         return surroundingTiles
 
-    def physicsRectsSurrounding(self, pos):
-        physicsRects = []
-        for tile in self.tilesSurrounding(pos):
-            if tile["tileType"] in PHYSICS_TILES:
-                physicsRects.append(
-                    pg.Rect(tile["pos"][0] * self.tileSize, tile["pos"][1] * self.tileSize, 
-                            self.tileSize, self.tileSize)
-                )
-        return physicsRects
+    # def physicsRectsSurrounding(self, pos):
+    #     physicsRects = []
+    #     for tile in self.tilesSurrounding(pos):
+    #         if tile["tileType"] in PHYSICS_TILES:
+    #             physicsRects.append(
+    #                 pg.Rect(tile["pos"][0] * TILE_SIZE, tile["pos"][1] * TILE_SIZE, 
+    #                         TILE_SIZE, TILE_SIZE)
+    #             )
+    #     return physicsRects
 
     def render(self, surface):
         for tile in self.offgridTiles:
@@ -51,4 +41,4 @@ class TileMap:
         for loc in self.tileMap:
             tile = self.tileMap[loc]
             surface.blit(self.game.assets[tile["tileType"]][tile["variant"]],
-                         (tile["pos"][0] * self.tileSize, tile["pos"][1] * self.tileSize))
+                         (tile["pos"][0] * TILE_SIZE, tile["pos"][1] * TILE_SIZE))

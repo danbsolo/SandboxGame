@@ -15,21 +15,21 @@ class Game:
 
         self.clock = pg.time.Clock()
         
-        tileSize = 20
         self.assets = {
-            "decor": loadImages("tiles/decor", tileSize, tileSize),
-            "grass": loadImages("tiles/grass", tileSize, tileSize),
-            "large_decor": loadImages("tiles/large_decor", tileSize, tileSize),
-            "stone": loadImages("tiles/stone", tileSize, tileSize)
+            #"decor": loadImages("tiles/decor", TILE_SIZE, TILE_SIZE),
+            "grass": loadImages("tiles/grass", TILE_SIZE, TILE_SIZE),
+            #"large_decor": loadImages("tiles/large_decor", TILE_SIZE, TILE_SIZE),
+            "stone": loadImages("tiles/stone", TILE_SIZE, TILE_SIZE),
+            "spikes": loadImages("tiles/spikes", TILE_SIZE, TILE_SIZE)
         }
 
         self.horizontalMovement = {}
         self.verticalMovement = {}
 
         self.playerId = 0
-        self.playerEntity = PlayerEntity(self, self.playerId, "player", (70, 70), (8, 15), imgPath='entities/player.png', convert=False, colorKey=False)
+        self.playerEntity = PlayerEntity(self, self.playerId, "player", (60/CONTAINER_DIVIDER, 480/CONTAINER_DIVIDER), (8, 15), imgPath='entities/player.png', convert=False, colorKey=False)
 
-        self.tileMap = TileMap(self, tileSize)
+        self.tileMap = TileMap(self, 4)
 
 
     def run(self):
@@ -68,7 +68,7 @@ class Game:
                     #   self.playerEntity.isUpright = not self.playerEntity.isUpright
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     x, y = event.pos
-                    print(f"Mouse clicked: ({x}, {y})")
+                    print(f"Mouse clicked: ({x}, {y}) -> ({x // CONTAINER_DIVIDER // TILE_SIZE}, {y // CONTAINER_DIVIDER // TILE_SIZE})")
 
             self.screen.blit(pg.transform.scale(self.container, (SCREEN_WIDTH, SCREEN_HEIGHT)))
             pg.display.update()  # update the display with any changes
