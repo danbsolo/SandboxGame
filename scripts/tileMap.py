@@ -24,15 +24,6 @@ class TileMap:
                 surroundingTiles.append(self.tileMap[checkLocation])
         return surroundingTiles
 
-    # def physicsRectsSurrounding(self, pos):
-    #     physicsRects = []
-    #     for tile in self.tilesSurrounding(pos):
-    #         if tile["tileType"] in PHYSICS_TILES:
-    #             physicsRects.append(
-    #                 pg.Rect(tile["pos"][0] * TILE_SIZE, tile["pos"][1] * TILE_SIZE, 
-    #                         TILE_SIZE, TILE_SIZE)
-    #             )
-    #     return physicsRects
 
     def render(self, surface):
         for tile in self.offgridTiles:

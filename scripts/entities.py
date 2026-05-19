@@ -52,6 +52,8 @@ class PlayerEntity(PhysicsEntity):
         self.checkpointPosition = pos
 
     def resetPosition(self):
+        self.game.startTime = time.time()
+        self.game.victoryAchieved = False
         self.pos = list(self.checkpointPosition)
         if not self.isUpright:
             self.flipGravity()
@@ -83,7 +85,9 @@ class PlayerEntity(PhysicsEntity):
                         self.resetPosition()
                         return
                     if tile["tileType"] in VICTORY_TILES:
-                        self.game.victoryAchieved = True
+                        if not self.game.victoryAchieved:
+                            self.game.victoryAchieved = True
+                            self.game.finishTime = f"{time.time() - self.game.startTime:.2f}"
                         continue
                     if frameMovement[0] > 0: # if moving right and colliding with a tile
                         entityRect.right = physicsRect.left
@@ -103,7 +107,9 @@ class PlayerEntity(PhysicsEntity):
                         self.resetPosition()
                         return
                     if tile["tileType"] in VICTORY_TILES:
-                        self.game.victoryAchieved = True
+                        if not self.game.victoryAchieved:
+                            self.game.victoryAchieved = True
+                            self.game.finishTime = f"{time.time() - self.game.startTime:.2f}"
                         continue
                     if frameMovement[1] > 0: # if moving down and colliding with a tile
                         entityRect.bottom = physicsRect.top

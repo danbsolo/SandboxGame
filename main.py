@@ -26,6 +26,8 @@ class Game:
         }
 
         self.victoryAchieved = False
+        self.startTime = time.time()
+        self.finishTime = None
 
         self.horizontalMovement = {}
         self.verticalMovement = {}
@@ -48,8 +50,8 @@ class Game:
             speed = 4
 
             if self.victoryAchieved:
-                text_surface = pg.font.SysFont('arialrounded', 50, bold=True).render('GGs!', True, (0, 0, 0))
-                self.container.blit(text_surface, (1154 / CONTAINER_DIVIDER, 644 / CONTAINER_DIVIDER))
+                text_surface = pg.font.SysFont('arialrounded', 50, bold=True).render(f'{self.finishTime}s\nCongrats!', True, (0, 0, 0))
+                self.container.blit(text_surface, (310 / CONTAINER_DIVIDER, 565 / CONTAINER_DIVIDER))
 
             for event in pg.event.get():  # get user input
                 if event.type == pg.QUIT:
